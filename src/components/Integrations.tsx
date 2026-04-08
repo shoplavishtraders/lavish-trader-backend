@@ -35,6 +35,18 @@ export function Integrations() {
   const [selectedPlatform, setSelectedPlatform] = useState<'WooCommerce' | 'Shopify' | 'Daraz' | null>(null);
   const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
   const [activeTab, setActiveTab] = useState<Record<string, 'credentials' | 'settings' | 'history'>>({});
+  const [formData, setFormData] = useState({
+    storeName: '',
+    storeUrl: '',
+    region: 'pk',
+    sellerId: '',
+    appKey: '',
+    appSecret: '',
+    consumerKey: '',
+    consumerSecret: '',
+    apiKey: '',
+    adminToken: '',
+  });
 
   const toggleSecret = (id: string) => {
     setShowSecrets(prev => ({ ...prev, [id]: !prev[id] }));
@@ -42,6 +54,24 @@ export function Integrations() {
 
   const setTab = (id: string, tab: 'credentials' | 'settings' | 'history') => {
     setActiveTab(prev => ({ ...prev, [id]: tab }));
+  };
+
+  const handleDarazOAuth = () => {
+    if (!formData.appKey || !formData.appSecret) {
+      alert('Please enter App Key and App Secret');
+      return;
+    }
+
+    const darazAuthUrl = `https://auth.daraz.com/oauth/authorize`;
+    const params = new URLSearchParams({
+      client_id: formData.appKey,
+      response_type: 'code',
+      scope: 'read,write',
+      redirect_uri: `${window.location.origin}/api/daraz/callback`,
+      state: Math.random().toString(36).substring(7),
+    });
+
+    window.open(`${darazAuthUrl}?${params.toString()}`, 'DarazAuth', 'width=800,height=600');
   };
 
   return (
@@ -347,11 +377,11 @@ export function Integrations() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold text-brand-500 uppercase tracking-widest">Store Display Name</label>
-                      <input type="text" placeholder="e.g. My Online Store" className="w-full bg-brand-950 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500/50 transition-all" />
+                      <input type="text" placeholder="e.g. My Online Store" value={formData.storeName} onChange={(e) => setFormData(p => ({...p, storeName: e.target.value}))} className="w-full bg-brand-950 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500/50 transition-all" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold text-brand-500 uppercase tracking-widest">Store URL / Domain</label>
-                      <input type="text" placeholder="https://..." className="w-full bg-brand-950 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500/50 transition-all" />
+                      <input type="text" placeholder="https://..." value={formData.storeUrl} onChange={(e) => setFormData(p => ({...p, storeUrl: e.target.value}))} className="w-full bg-brand-950 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500/50 transition-all" />
                     </div>
 
                     {selectedPlatform === 'Daraz' && (
@@ -359,7 +389,7 @@ export function Integrations() {
                         <div className="space-y-2">
                           <label className="text-[10px] font-bold text-brand-500 uppercase tracking-widest">Region / Country</label>
                           <div className="relative">
-                            <select className="w-full bg-brand-950 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500/50 transition-all appearance-none">
+                            <select value={formData.region} onChange={(e) => setFormData(p => ({...p, region: e.target.value}))} className="w-full bg-brand-950 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500/50 transition-all appearance-none">
                               <option value="pk">Pakistan (PK)</option>
                               <option value="bd">Bangladesh (BD)</option>
                               <option value="lk">Sri Lanka (LK)</option>
@@ -371,16 +401,16 @@ export function Integrations() {
                         </div>
                         <div className="space-y-2">
                           <label className="text-[10px] font-bold text-brand-500 uppercase tracking-widest">Seller ID (Store ID)</label>
-                          <input type="text" placeholder="PK-XXXXXX" className="w-full bg-brand-950 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500/50 transition-all" />
+                          <input type="text" placeholder="PK-XXXXXX" value={formData.sellerId} onChange={(e) => setFormData(p => ({...p, sellerId: e.target.value}))} className="w-full bg-brand-950 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500/50 transition-all" />
                         </div>
                         <div className="space-y-2">
                           <label className="text-[10px] font-bold text-brand-500 uppercase tracking-widest">App Key (Daraz Open Platform)</label>
-                          <input type="text" placeholder="Enter App Key" className="w-full bg-brand-950 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500/50 transition-all" />
+                          <input type="text" placeholder="Enter App Key" value={formData.appKey} onChange={(e) => setFormData(p => ({...p, appKey: e.target.value}))} className="w-full bg-brand-950 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500/50 transition-all" />
                         </div>
                         <div className="space-y-2">
                           <label className="text-[10px] font-bold text-brand-500 uppercase tracking-widest">App Secret</label>
                           <div className="relative">
-                            <input type="password" placeholder="Enter App Secret" className="w-full bg-brand-950 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500/50 transition-all" />
+                            <input type="password" placeholder="Enter App Secret" value={formData.appSecret} onChange={(e) => setFormData(p => ({...p, appSecret: e.target.value}))} className="w-full bg-brand-950 border border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500/50 transition-all" />
                             <Lock className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-600" />
                           </div>
                         </div>
@@ -438,13 +468,16 @@ export function Integrations() {
                   </div>
 
                   <div className="pt-6 border-t border-white/5 flex items-center justify-end gap-3">
-                    <button 
+                    <button
                       onClick={() => setSelectedPlatform(null)}
                       className="px-6 py-3 rounded-xl text-sm font-bold text-brand-400 hover:bg-white/5 transition-all"
                     >
                       Cancel
                     </button>
-                    <button className="bg-blue-600 hover:bg-blue-500 px-8 py-3 rounded-xl text-sm font-bold text-white transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2">
+                    <button
+                      onClick={() => selectedPlatform === 'Daraz' ? handleDarazOAuth() : console.log('Connect', selectedPlatform)}
+                      className="bg-blue-600 hover:bg-blue-500 px-8 py-3 rounded-xl text-sm font-bold text-white transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2"
+                    >
                       {selectedPlatform === 'Daraz' ? (
                         <>
                           <Lock className="w-4 h-4" />
