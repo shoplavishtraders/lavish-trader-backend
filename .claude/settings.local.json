@@ -22,7 +22,8 @@
       "Bash(git init:*)",
       "Bash(git branch:*)",
       "Bash(gcloud --version)",
-      "Bash(grep -l \"mock\\\\|default\" /Users/apple/Desktop/omnicore-erp/src/components/*.tsx)"
+      "Bash(grep -l \"mock\\\\|default\" /Users/apple/Desktop/omnicore-erp/src/components/*.tsx)",
+      "WebSearch"
     ]
   }
 }
