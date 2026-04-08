@@ -28,47 +28,7 @@ import {
 import { cn } from '../lib/utils';
 import { StoreConnection } from '../types';
 
-const mockConnections: StoreConnection[] = [
-  { 
-    id: '1', 
-    platform: 'WooCommerce', 
-    storeName: 'OmniCore Main Shop',
-    storeUrl: 'https://shop.omnicore.com', 
-    status: 'Connected', 
-    lastSync: '2 mins ago',
-    credentials: {
-      consumerKey: 'ck_7829...3210',
-      consumerSecret: 'cs_9912...8877'
-    }
-  },
-  { 
-    id: '2', 
-    platform: 'Shopify', 
-    storeName: 'OmniCore Official',
-    storeUrl: 'https://omnicore-official.myshopify.com', 
-    status: 'Error', 
-    lastSync: '15 mins ago',
-    credentials: {
-      adminAccessToken: 'shpat_928...4455',
-      apiKey: '8822...1100'
-    }
-  },
-  { 
-    id: '3', 
-    platform: 'Daraz', 
-    storeName: 'OmniCore Daraz Mall',
-    storeUrl: 'https://daraz.pk/shop/omnicore', 
-    status: 'Connected', 
-    lastSync: '5 mins ago',
-    credentials: {
-      storeId: 'PK-123456',
-      appKey: '100293',
-      appSecret: 'as_928...1122',
-      accessToken: 'dz_1122...9988',
-      region: 'pk'
-    }
-  },
-];
+const mockConnections: StoreConnection[] = [];
 
 export function Integrations() {
   const [isModalOpen, setIsModalOpen] = useState(false);
