@@ -475,7 +475,7 @@ export function Integrations() {
                       Cancel
                     </button>
                     <button
-                      onClick={() => selectedPlatform === 'Daraz' ? handleDarazOAuth() : console.log('Connect', selectedPlatform)}
+                      onClick={() => selectedPlatform === 'Daraz' ? handleDarazOAuth() : alert('Coming soon: ' + selectedPlatform)}
                       className="bg-blue-600 hover:bg-blue-500 px-8 py-3 rounded-xl text-sm font-bold text-white transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2"
                     >
                       {selectedPlatform === 'Daraz' ? (
