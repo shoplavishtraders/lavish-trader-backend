@@ -1,0 +1,41 @@
+steps:
+  # Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/omnicore-erp/omnicore-erp:$SHORT_SHA'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/omnicore-erp/omnicore-erp:latest'
+      - '.'
+
+  # Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/omnicore-erp/omnicore-erp:$SHORT_SHA'
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'omnicore-erp'
+      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/omnicore-erp/omnicore-erp:$SHORT_SHA'
+      - '--region=us-central1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--set-env-vars=GEMINI_API_KEY=$${_GEMINI_API_KEY},APP_URL=$${_APP_URL}'
+      - '--quiet'
+
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/omnicore-erp/omnicore-erp:$SHORT_SHA'
+
+substitutions:
+  _GEMINI_API_KEY: '${GEMINI_API_KEY}'
+  _APP_URL: '${APP_URL}'
+
+options:
+  machineType: 'N1_HIGHCPU_8'
+
+timeout: '1800s'
